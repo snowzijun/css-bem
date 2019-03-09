@@ -11,19 +11,17 @@ function modifier(ele,modifiers) {
     return join(ele,modifiers,MODIFIER)
   }
   if(Array.isArray(modifiers)) {
-    return modifiers.map(m => join(ele,m,MODIFIER))
+    return modifiers.map(m => modifier(ele,m))
   }
   return Object.keys(modifiers).reduce((result,key) => {
-     if(modifiers[key]){
-      result[join(ele,key,MODIFIER)] = true
-     }
+      result[modifier(ele,key)] = modifiers[key]
      return result
   },{})
 }
 
 export default function bem(namespace,component){
   const hasNC = namespace && component
-  let np = hasNC ? (namespace + SEPARATOR +component) : namespace || component || ''
+  let np = hasNC ? (join(namespace,component,SEPARATOR)) : namespace || component || ''
 
   return function(ele,modifiers){
     if(ele && typeof ele !== 'string'){
